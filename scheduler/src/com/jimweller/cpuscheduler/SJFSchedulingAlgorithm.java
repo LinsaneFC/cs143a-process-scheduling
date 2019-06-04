@@ -16,6 +16,7 @@ public class SJFSchedulingAlgorithm extends BaseSchedulingAlgorithm implements O
     
 
     private ArrayList<Process> jobs;
+    boolean preemptive;
 
     class SJFComparator implements Comparator<Process> {
 		public int compare(Process p1, Process p2) {
@@ -34,7 +35,7 @@ public class SJFSchedulingAlgorithm extends BaseSchedulingAlgorithm implements O
         /*------------------------------------------------------------*/
         activeJob = null;
         jobs = new ArrayList<Process>();
-
+        preemptive = false;
 
         /*------------------------------------------------------------*/
     }
@@ -55,13 +56,14 @@ public class SJFSchedulingAlgorithm extends BaseSchedulingAlgorithm implements O
     /** Returns true if the job was present and was removed. */
     public boolean removeJob(Process p){
         // Remove the next lines to start your implementation
-        throw new UnsupportedOperationException();
         
         // Fill in this method
         /*------------------------------------------------------------*/
+        if(p == activeJob)
+            activeJob = null;
 
 
-
+        return jobs.remove(p);
         /*------------------------------------------------------------*/
     }
 
@@ -74,11 +76,17 @@ public class SJFSchedulingAlgorithm extends BaseSchedulingAlgorithm implements O
     /** Returns the next process that should be run by the CPU, null if none available.*/
     public Process getNextJob(long currentTime){
         // Remove the next lines to start your implementation
-        throw new UnsupportedOperationException();
         
         // Fill in this method
         /*------------------------------------------------------------*/
+        Process next = null;
 
+		if (!isJobFinished())
+			return activeJob;
+		if (jobs.size() > 0)
+			next = jobs.get(0);
+		activeJob = next;
+		return activeJob;
 
 
         /*------------------------------------------------------------*/
@@ -93,11 +101,10 @@ public class SJFSchedulingAlgorithm extends BaseSchedulingAlgorithm implements O
      */
     public boolean isPreemptive(){
         // Remove the next lines to start your implementation
-        throw new UnsupportedOperationException();
         
         // Fill in this method
         /*------------------------------------------------------------*/
-
+        return preemptive;
 
 
         /*------------------------------------------------------------*/
@@ -108,12 +115,10 @@ public class SJFSchedulingAlgorithm extends BaseSchedulingAlgorithm implements O
      */
     public void setPreemptive(boolean  v){
         // Remove the next lines to start your implementation
-        throw new UnsupportedOperationException();
         
         // Fill in this method
         /*------------------------------------------------------------*/
-
-
+        preemptive = v;
 
         /*------------------------------------------------------------*/
     }
