@@ -16,7 +16,7 @@ public class SJFSchedulingAlgorithm extends BaseSchedulingAlgorithm implements O
     
 
     private ArrayList<Process> jobs;
-    boolean preemptive;
+    private boolean preemptive;
 
     class SJFComparator implements Comparator<Process> {
 		public int compare(Process p1, Process p2) {
@@ -80,14 +80,23 @@ public class SJFSchedulingAlgorithm extends BaseSchedulingAlgorithm implements O
         // Fill in this method
         /*------------------------------------------------------------*/
         Process next = null;
+        if(!preemptive){
+		    if (!isJobFinished())
+		    	return activeJob;
+		    if (jobs.size() > 0)
+			    next = jobs.get(0);
+		    activeJob = next;
+		    return activeJob;
+        }else{
+            if(!isJobFinished()){
+                Collections.sort(jobs, comparator);
+            }
+            if(jobs.size() > 0)
+                next = jobs.get(0);
+            activeJob = next;
+            return activeJob;
 
-		if (!isJobFinished())
-			return activeJob;
-		if (jobs.size() > 0)
-			next = jobs.get(0);
-		activeJob = next;
-		return activeJob;
-
+        }
 
         /*------------------------------------------------------------*/
     }
@@ -105,7 +114,6 @@ public class SJFSchedulingAlgorithm extends BaseSchedulingAlgorithm implements O
         // Fill in this method
         /*------------------------------------------------------------*/
         return preemptive;
-
 
         /*------------------------------------------------------------*/
     }
