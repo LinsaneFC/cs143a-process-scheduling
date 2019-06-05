@@ -13,7 +13,8 @@ public class FCFSSchedulingAlgorithm extends BaseSchedulingAlgorithm {
 	private ArrayList<Process> jobs;
 	// Add data structures to support memory management
 	/*------------------------------------------------------------*/
-
+	private ArrayList<MemoryBlock> mem;
+	private String memFit;
 
 	/*------------------------------------------------------------*/
 
@@ -34,25 +35,64 @@ public class FCFSSchedulingAlgorithm extends BaseSchedulingAlgorithm {
 
 		// Initialize memory
 		/*------------------------------------------------------------*/
-
+		mem = new ArrayList<MemoryBlock>();
+		mem.add(new MemoryBlock(380, true, null));
+		memFit = "";
 		/*------------------------------------------------------------*/
-
 	}
 
 
 	/** Add the new job to the correct queue. */
 	public void addJob(Process p) {
-
+		
 	// Check if any memory is available 
 	/*------------------------------------------------------------*/
-
+		if(!memFit.equals("")){
+			boolean found = false;
+			int i = -1;
+			if(memFit.toUpperCase().equals("FIRST")){
+				for(MemoryBlock m : mem){
+					if(m.getSize() >= p.getMemSize() && m.getFree()){
+						found = true;
+						i = mem.indexOf(m);
+						break;
+					}
+				}	
+			}else{
+				long difference = Long.MAX_VALUE;
+				for(MemoryBlock m : mem){
+					if(m.getSize() >= p.getMemSize() && m.getFree()){
+						found = true;
+						if( (m.getSize() - p.getMemSize()) < difference ){
+							difference = m.getSize() - p.getMemSize();
+							i = mem.indexOf(m);
+							if(difference == 0){
+								break;
+							}
+						}
+					}
+				}	
+			}
+		
 	/*------------------------------------------------------------*/
 
-	// If enough memory is not available then don't add it to queue 
-	// {
-	// 	p.setIgnore(true);
-	// 	return;
-	// }
+		// If enough memory is not available then don't add it to queue
+			if(!found){
+				p.setIgnore(true);
+				return;
+			}
+
+			if(found){
+				if(mem.get(i).getSize() > p.getMemSize()){
+						mem.add(i + 1, new MemoryBlock(mem.get(i).getSize() - p.getMemSize(), true, p));
+						mem.get(i).setSize(p.getMemSize());
+						mem.get(i).setFree(false);
+				}else{
+					mem.get(i).setFree(false);
+					mem.get(i).setProcess(p);
+				}
+			}
+		}
 
 		jobs.add(p);
 		Collections.sort(jobs, comparator);
@@ -65,6 +105,58 @@ public class FCFSSchedulingAlgorithm extends BaseSchedulingAlgorithm {
 
 		// In case memory was allocated, free it
 		/*------------------------------------------------------------*/
+		if(!memFit.equals("")){
+			int i = -1;
+			boolean found = false;
+			for(MemoryBlock m : mem){
+				if(m.getProcess().getPID() == p.getPID()){
+					found = true;
+					i = mem.indexOf(m);
+					break;
+				}
+			}
+
+			if(found){
+				if(i == 0){
+					if(mem.size() > 1){
+						if(mem.get(i+1).getFree()){
+							mem.get(i).setSize(mem.get(i).getSize() + mem.get(i+1).getSize());
+							mem.get(i).setProcess(null);
+							mem.remove(i+1);
+						}
+					}
+					mem.get(i).setProcess(null);
+					mem.get(i).setFree(true);
+				}else if(i == mem.size() - 1){
+					if(mem.get(i-1).getFree()){
+						mem.get(i-1).setSize(mem.get(i).getSize() + mem.get(i-1).getSize());
+						mem.get(i-1).setProcess(null);
+						mem.remove(i);
+					}else{
+						mem.get(i).setProcess(null);
+						mem.get(i).setFree(true);
+					}
+				}else{
+					if(mem.get(i-1).getFree() && mem.get(i+1).getFree()){
+						mem.get(i-1).setSize(mem.get(i).getSize() + mem.get(i-1).getSize() + mem.get(i+1).getSize());
+						mem.get(i-1).setProcess(null);
+						mem.remove(i+1);
+						mem.remove(i);
+					}else if(mem.get(i-1).getFree()){
+						mem.get(i-1).setSize(mem.get(i).getSize() + mem.get(i-1).getSize());
+						mem.get(i-1).setProcess(null);
+						mem.remove(i);
+					}else if(mem.get(i+1).getFree()){
+						mem.get(i).setSize(mem.get(i).getSize() + mem.get(i+1).getSize());
+						mem.get(i).setProcess(null);
+						mem.remove(i+1);
+					}else{
+						mem.get(i).setProcess(null);
+						mem.get(i).setFree(true);
+					}
+				}
+			}
+		}
 
 		/*------------------------------------------------------------*/
 
@@ -100,5 +192,6 @@ public class FCFSSchedulingAlgorithm extends BaseSchedulingAlgorithm {
 
 	public void setMemoryManagment(String v) {
 		// Modify class to suppor memory management
+		memFit = v.toUpperCase();
 	}
 }
