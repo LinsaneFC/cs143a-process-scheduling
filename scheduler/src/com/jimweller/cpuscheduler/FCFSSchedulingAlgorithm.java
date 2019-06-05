@@ -160,10 +160,9 @@ public class FCFSSchedulingAlgorithm extends BaseSchedulingAlgorithm {
 
 		// In case memory was allocated, free it
 		/*------------------------------------------------------------*/
-		if(!memFit.equals("")){
+		/*if(!memFit.equals("")){
 			int i = -1;
 			boolean found = false;
-			System.out.println(this.mem.size());
 			for(MemoryBlock m : mem){
 				if(!m.getFree() && m.getProcess() == p.getPID()){
 					found = true;
@@ -213,7 +212,7 @@ public class FCFSSchedulingAlgorithm extends BaseSchedulingAlgorithm {
 				}
 			}
 		}
-
+*/
 		/*------------------------------------------------------------*/
 
 		return jobs.remove(p);
