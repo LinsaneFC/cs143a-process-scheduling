@@ -31,7 +31,7 @@ public class RoundRobinSchedulingAlgorithm extends BaseSchedulingAlgorithm {
         activeJob = null;
         jobs = new ArrayList<Process>();
         quantum = 10;
-        times = 0;
+        times = 1;
 
         /*------------------------------------------------------------*/
     }
@@ -105,10 +105,9 @@ public class RoundRobinSchedulingAlgorithm extends BaseSchedulingAlgorithm {
                 }
             }
             activeJob = next;
-            times = 0;
+            times = 1;
             return activeJob;
         }
-        
         times++;
         return activeJob;
 
