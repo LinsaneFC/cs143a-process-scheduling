@@ -160,7 +160,7 @@ public class FCFSSchedulingAlgorithm extends BaseSchedulingAlgorithm {
 
 		// In case memory was allocated, free it
 		/*------------------------------------------------------------*/
-		/*if(!memFit.equals("")){
+		if(!memFit.equals("")){
 			int i = -1;
 			boolean found = false;
 			for(MemoryBlock m : mem){
@@ -212,7 +212,7 @@ public class FCFSSchedulingAlgorithm extends BaseSchedulingAlgorithm {
 				}
 			}
 		}
-*/
+
 		/*------------------------------------------------------------*/
 
 		return jobs.remove(p);
