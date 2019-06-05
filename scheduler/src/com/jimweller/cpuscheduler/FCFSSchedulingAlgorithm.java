@@ -12,31 +12,31 @@ class MemoryBlock{
 
     private long size;
     private boolean free;
-    private Process p;
+    private long p;
 
-    public MemoryBlock(Process ap){
+    public MemoryBlock(long ap){
         size = 0;
         free = true;
         p = ap;
     }
 
-    public MemoryBlock(long aSize, Process ap){
+    public MemoryBlock(long aSize, long ap){
         size = aSize;
         free = true;
         p = ap;
     }
 
-    public MemoryBlock(long aSize, boolean aFree, Process ap){
+    public MemoryBlock(long aSize, boolean aFree, long ap){
         size = aSize;
         free = aFree;
         p = ap;
     }
 
-    public Process getProcess(){
+    public long getProcess(){
         return p;
     }
 
-    public void setProcess(Process ap){
+    public void setProcess(long ap){
         p = ap;
     }
 
@@ -57,7 +57,7 @@ class MemoryBlock{
 	}
 	
 	public String toString(){
-		return "Size: " + size + " Free: " + free + " Process " + p.getPID();
+		return "Size: " + size + " Free: " + free + " Process " + p;
 	}
 }
 
@@ -90,7 +90,7 @@ public class FCFSSchedulingAlgorithm extends BaseSchedulingAlgorithm {
 		// Initialize memory
 		/*------------------------------------------------------------*/
 		mem = new ArrayList<MemoryBlock>();
-		mem.add(new MemoryBlock(380, true, null));
+		mem.add(new MemoryBlock(380, true, -1));
 		memFit = "";
 		/*------------------------------------------------------------*/
 	}
@@ -138,13 +138,13 @@ public class FCFSSchedulingAlgorithm extends BaseSchedulingAlgorithm {
 
 			if(found){
 				if(mem.get(i).getSize() > p.getMemSize()){
-						mem.add(i + 1, new MemoryBlock(mem.get(i).getSize() - p.getMemSize(), true, null));
+						mem.add(i + 1, new MemoryBlock(mem.get(i).getSize() - p.getMemSize(), true, -1));
 						mem.get(i).setSize(p.getMemSize());
-						mem.get(i).setProcess(p);
+						mem.get(i).setProcess(p.getPID());
 						mem.get(i).setFree(false);
 				}else{
 					mem.get(i).setFree(false);
-					mem.get(i).setProcess(p);
+					mem.get(i).setProcess(p.getPID());
 				}
 			}
 		}
@@ -165,7 +165,7 @@ public class FCFSSchedulingAlgorithm extends BaseSchedulingAlgorithm {
 			boolean found = false;
 			System.out.println(mem);
 			for(MemoryBlock m : mem){
-				if(!m.getFree() && m.getProcess().getPID() == p.getPID()){
+				if(!m.getFree() && m.getProcess() == p.getPID()){
 					found = true;
 					i = mem.indexOf(m);
 					break;
@@ -177,37 +177,37 @@ public class FCFSSchedulingAlgorithm extends BaseSchedulingAlgorithm {
 					if(mem.size() > 1){
 						if(mem.get(i+1).getFree()){
 							mem.get(i).setSize(mem.get(i).getSize() + mem.get(i+1).getSize());
-							mem.get(i).setProcess(null);
+							mem.get(i).setProcess(-1);
 							mem.remove(i+1);
 						}
 					}
-					mem.get(i).setProcess(null);
+					mem.get(i).setProcess(-1);
 					mem.get(i).setFree(true);
 				}else if(i == mem.size() - 1){
 					if(mem.get(i-1).getFree()){
 						mem.get(i-1).setSize(mem.get(i).getSize() + mem.get(i-1).getSize());
-						mem.get(i-1).setProcess(null);
+						mem.get(i-1).setProcess(-1);
 						mem.remove(i);
 					}else{
-						mem.get(i).setProcess(null);
+						mem.get(i).setProcess(-1);
 						mem.get(i).setFree(true);
 					}
 				}else{
 					if(mem.get(i-1).getFree() && mem.get(i+1).getFree()){
 						mem.get(i-1).setSize(mem.get(i).getSize() + mem.get(i-1).getSize() + mem.get(i+1).getSize());
-						mem.get(i-1).setProcess(null);
+						mem.get(i-1).setProcess(-1);
 						mem.remove(i+1);
 						mem.remove(i);
 					}else if(mem.get(i-1).getFree()){
 						mem.get(i-1).setSize(mem.get(i).getSize() + mem.get(i-1).getSize());
-						mem.get(i-1).setProcess(null);
+						mem.get(i-1).setProcess(-1);
 						mem.remove(i);
 					}else if(mem.get(i+1).getFree()){
 						mem.get(i).setSize(mem.get(i).getSize() + mem.get(i+1).getSize());
-						mem.get(i).setProcess(null);
+						mem.get(i).setProcess(-1);
 						mem.remove(i+1);
 					}else{
-						mem.get(i).setProcess(null);
+						mem.get(i).setProcess(-1);
 						mem.get(i).setFree(true);
 					}
 				}
