@@ -110,7 +110,6 @@ public class PrioritySchedulingAlgorithm extends BaseSchedulingAlgorithm impleme
      */
     public boolean isPreemptive(){
         // Remove the next lines to start your implementation
-        throw new UnsupportedOperationException();
         
         // Fill in this method
         /*------------------------------------------------------------*/
