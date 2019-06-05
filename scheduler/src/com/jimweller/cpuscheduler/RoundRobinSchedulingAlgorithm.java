@@ -15,7 +15,7 @@ public class RoundRobinSchedulingAlgorithm extends BaseSchedulingAlgorithm {
     /** the time slice each process gets */
     private int quantum; 
     private ArrayList<Process> jobs;
-    private long startTime; 
+    private int times; 
 
     class RRComparator implements Comparator<Process> {
 		public int compare(Process p1, Process p2) {
@@ -31,7 +31,7 @@ public class RoundRobinSchedulingAlgorithm extends BaseSchedulingAlgorithm {
         activeJob = null;
         jobs = new ArrayList<Process>();
         quantum = 10;
-        startTime = 0;
+        times = 0;
 
         /*------------------------------------------------------------*/
     }
@@ -96,13 +96,18 @@ public class RoundRobinSchedulingAlgorithm extends BaseSchedulingAlgorithm {
         // Fill in this method
         /*------------------------------------------------------------*/
         Process next = null;
-        if(startTime + quantum >= currentTime && jobs.size() > 0){
-            next = jobs.get(jobs.indexOf(activeJob) + 1);
+        if(times >= quantum){
+            if(jobs.indexOf(activeJob) == jobs.size() - 1){
+                next = jobs.get(0);
+            }else{
+                next = jobs.get(jobs.indexOf(activeJob) + 1);
+            }
             activeJob = next;
-            startTime = currentTime;
+            times = 0;
             return activeJob;
         }
         
+        times++;
         return activeJob;
 
 
