@@ -136,6 +136,7 @@ public class FCFSSchedulingAlgorithm extends BaseSchedulingAlgorithm {
 				if(mem.get(i).getSize() > p.getMemSize()){
 						mem.add(i + 1, new MemoryBlock(mem.get(i).getSize() - p.getMemSize(), true, p));
 						mem.get(i).setSize(p.getMemSize());
+						mem.get(i).setProcess(p);
 						mem.get(i).setFree(false);
 				}else{
 					mem.get(i).setFree(false);
@@ -159,7 +160,7 @@ public class FCFSSchedulingAlgorithm extends BaseSchedulingAlgorithm {
 			int i = -1;
 			boolean found = false;
 			for(MemoryBlock m : mem){
-				if(m.getProcess().getPID() == p.getPID()){
+				if(!m.getFree() && m.getProcess().getPID() == p.getPID()){
 					found = true;
 					i = mem.indexOf(m);
 					break;
