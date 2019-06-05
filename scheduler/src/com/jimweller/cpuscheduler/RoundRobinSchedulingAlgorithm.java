@@ -13,40 +13,51 @@ import java.util.*;
 public class RoundRobinSchedulingAlgorithm extends BaseSchedulingAlgorithm {
 
     /** the time slice each process gets */
-    private int quantum;
+    private int quantum; 
+    private ArrayList<Process> jobs;
+    private long startTime; 
+
+    class RRComparator implements Comparator<Process> {
+		public int compare(Process p1, Process p2) {
+			return Long.signum(p1.getPID() - p2.getPID());
+		}
+	}
+
+	RRComparator comparator = new RRComparator();
 
     RoundRobinSchedulingAlgorithm() {
         // Fill in this method
         /*------------------------------------------------------------*/
-
-
+        activeJob = null;
+        jobs = new ArrayList<Process>();
+        quantum = 10;
+        startTime = 0;
 
         /*------------------------------------------------------------*/
     }
 
     /** Add the new job to the correct queue. */
     public void addJob(Process p) {
-        // Remove the next lines to start your implementation
-        throw new UnsupportedOperationException();
-        
+        // Remove the next lines to start your implementation        
         // Fill in this method
         /*------------------------------------------------------------*/
 
-
-
+        jobs.add(p);
+        Collections.sort(jobs, comparator);
         /*------------------------------------------------------------*/
     }
 
     /** Returns true if the job was present and was removed. */
     public boolean removeJob(Process p) {
         // Remove the next lines to start your implementation
-        throw new UnsupportedOperationException();
         
         // Fill in this method
         /*------------------------------------------------------------*/
+        if(p == activeJob)
+            activeJob = null;
 
 
-
+        return jobs.remove(p);
         /*------------------------------------------------------------*/
     }
 
@@ -81,11 +92,18 @@ public class RoundRobinSchedulingAlgorithm extends BaseSchedulingAlgorithm {
      */
     public Process getNextJob(long currentTime) {
         // Remove the next lines to start your implementation
-        throw new UnsupportedOperationException();
         
         // Fill in this method
         /*------------------------------------------------------------*/
-
+        Process next = null;
+        if(startTime + quantum >= currentTime){
+            next = jobs.get(jobs.indexOf(activeJob) + 1);
+            activeJob = next;
+            startTime = currentTime;
+            return activeJob;
+        }
+        
+        return activeJob;
 
 
         /*------------------------------------------------------------*/
