@@ -105,7 +105,7 @@ public class RoundRobinSchedulingAlgorithm extends BaseSchedulingAlgorithm {
                 }
             }
             activeJob = next;
-            times = 1;
+            times = 0;
             return activeJob;
         }
         times++;
