@@ -162,7 +162,6 @@ public class FCFSSchedulingAlgorithm extends BaseSchedulingAlgorithm {
 		if(!memFit.equals("")){
 			int i = -1;
 			boolean found = false;
-			System.out.println(mem);
 			for(MemoryBlock m : mem){
 				if(!m.getFree() && m.getProcess() == p.getPID()){
 					found = true;
