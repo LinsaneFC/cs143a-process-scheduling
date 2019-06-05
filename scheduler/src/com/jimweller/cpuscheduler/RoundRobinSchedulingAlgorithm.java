@@ -97,6 +97,13 @@ public class RoundRobinSchedulingAlgorithm extends BaseSchedulingAlgorithm {
         // Fill in this method
         /*------------------------------------------------------------*/
         Process next = null;
+        if(isJobFinished()){
+            if(jobs.indexOf(activeJob) == jobs.size() - 1){
+                next = jobs.get(0);
+            }else{
+                next = jobs.get(jobs.indexOf(activeJob) + 1);
+            }
+        }
         if(times >= quantum){
             if(jobs.size() > 0){
                 if(jobs.indexOf(activeJob) == jobs.size() - 1){
