@@ -214,6 +214,7 @@ public class FCFSSchedulingAlgorithm extends BaseSchedulingAlgorithm {
 					}else if(mem.get(i+1).getFree()){
 						mem.get(i).setSize(mem.get(i).getSize() + mem.get(i+1).getSize());
 						mem.get(i).setProcess(-1);
+						mem.get(i).setFree(true);
 						mem.remove(i+1);
 					}else{
 						mem.get(i).setProcess(-1);
