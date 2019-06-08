@@ -59,6 +59,20 @@ class MemoryBlock{
 	public String toString(){
 		return "Size: " + size + " Free: " + free + " Process " + p;
 	}
+
+	@Override
+	public boolean equals(Object otherMemBlock){
+		if(otherMemBlock == this)
+			return true;
+		
+		if(!(otherMemBlock instanceof MemoryBlock))
+			return false;
+		
+		MemoryBlock other = (MemoryBlock) otherMemBlock;
+
+		return (this.free == other.free) && (Long.compare(p, other.p) == 0) && (Long.compare(size, other.size) == 0);
+	}
+
 }
 
 
@@ -138,10 +152,10 @@ public class FCFSSchedulingAlgorithm extends BaseSchedulingAlgorithm {
 
 			if(found){
 				if(mem.get(i).getSize() > p.getMemSize()){
-						mem.add(i + 1, new MemoryBlock(mem.get(i).getSize() - p.getMemSize(), true, -1));
-						mem.get(i).setSize(p.getMemSize());
-						mem.get(i).setProcess(p.getPID());
-						mem.get(i).setFree(false);
+					mem.add(i + 1, new MemoryBlock((mem.get(i).getSize() - p.getMemSize()), true, -1));
+					mem.get(i).setSize(p.getMemSize());
+					mem.get(i).setProcess(p.getPID());
+					mem.get(i).setFree(false);
 				}else{
 					mem.get(i).setFree(false);
 					mem.get(i).setProcess(p.getPID());
